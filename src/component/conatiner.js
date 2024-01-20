@@ -3,13 +3,27 @@ import timeSlotsForDisplay from "../data/data";
 import './container.css';
 
 const eventsData = [
-  { start: 0, end: 60 },   // 9:00 AM - 10:00 AM
+  { start: 0, end: 60 },   // 9:00 AM - 10:00 AM/
   { start: 30, end: 90 },  // 9:30 AM - 10:30 AM
   { start: 90, end: 150 }, // 10:30 AM - 11:30 AM
+  {start:150, end:700}
   // Add more events as needed
 ];
 
 
+// Function to convert time string to minutes since 9 AM
+const convertTimeStringToMinutes = (timeString) => {
+  if (!timeString) return 0; // Return 0 if the timeString is undefined or empty
+
+  const [hours, minutes, period] = timeString.match(/(\d+):(\d+) (\w+)/).slice(1);
+  let totalMinutes = parseInt(hours, 10) * 60 + parseInt(minutes, 10);
+
+  if (period.toLowerCase() === 'pm' && hours !== '12') {
+    totalMinutes += 720; 
+  }
+
+  return totalMinutes;
+};
 
 
 const Calendar = () => {
@@ -31,24 +45,27 @@ const Calendar = () => {
   const displayTime = timeSlotsForDisplay.map((item) => {
     const event = eventsData.find((event) => {
       const timeRange = getTimeRange(event.start, event.end);
-      console.log(timeRange.startTime === item.time  ||
-        timeRange.endTime === item.halftime)
-      return (
-        timeRange.startTime === item.time  ||
-        timeRange.endTime === item.halftime
-      );
+
+
+      const startTimeMinutes = convertTimeStringToMinutes(timeRange.startTime);
+    const endTimeMinutes = convertTimeStringToMinutes(timeRange.endTime);
+    const itemTimeMinutes = convertTimeStringToMinutes(item.time);
+    
+    return (
+      startTimeMinutes <= itemTimeMinutes &&
+      endTimeMinutes >= itemTimeMinutes
+    );
     });
+    
     
     return(
       <div key={item.id}>
           <div className="timeContainer_event">
             {item.time}
+            <div className="timeContainer_occupied">
               {event ? 'Occupied' : ''}    
+            </div>
           </div>
-          <div className="timeContainer_event">
-            {item.halftime !== '' ? item.halftime : null}
-            {event ? 'Occupied' : ''}
-          </div> 
       </div>
     )
   })

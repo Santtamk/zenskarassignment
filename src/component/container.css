@@ -2,9 +2,20 @@
     padding: 0 10px 0 10px;
     width: 600px;
     height: 720px;
+    /* overflow: hidden; */
+    /* border: 1px solid #ddd;  */
 }
 .timeContainer_event{
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  width: 100%;
+  height: 100%; 
+  border-bottom: 1px solid #ddd; 
+  box-sizing: border-box;
+  padding: 5px 10px; 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
+
+.timeContainer_occupied {
+    background-color: #ffcccc; 
+  }
